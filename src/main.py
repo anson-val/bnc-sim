@@ -1,5 +1,7 @@
+from network.network import LineNetwork
+
 def main():
-    print("TODO")
+    LineNetwork(256, 10, 10, 10).feed_file("test.txt")  
 
 
 if __name__ == "__main__":

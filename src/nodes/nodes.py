@@ -8,6 +8,8 @@ from time import sleep
 
 from src.packets.packets import Batch, batch_to_packets, Packet, Buffer, packets_to_batch
 
+SEED = 123
+
 
 class Node(ABC):
     def __init__(self, node_id, network_id, packet_size, gf, network):
@@ -87,6 +89,7 @@ class SourceNode(Node):
         number_of_packets = math.ceil(file_size / self.packet_size)
         degree = random.randint(1, self.max_degree)
         batch = []
+        random.seed(SEED)
         for i in range(degree):
             position_in_bytes = random.randint(0, number_of_packets - 1) * self.packet_size
             file.seek(position_in_bytes)
@@ -98,7 +101,7 @@ class SourceNode(Node):
 
         generator_matrix = self.gf.Random((degree, degree))  # size not confirm
 
-        return Batch(batch @ generator_matrix, generator_matrix, None)
+        return Batch(batch @ generator_matrix, generator_matrix)
 
 
 class IntermediateNode(Node):
@@ -115,7 +118,9 @@ class DestinationNode(Node):
         self.max_buffer_length = max_buffer_length
 
     def decode(self):
-        pass
+        random.seed(SEED)
+
+__all__ = ['Node', 'SourceNode', 'IntermediateNode', 'DestinationNode']
 
 
 if __name__ == "__main__":
